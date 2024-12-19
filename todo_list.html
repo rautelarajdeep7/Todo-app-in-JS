@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: rgb(167, 166, 166);
+        }
+
+        .input_main {
+            width: 50%;
+            margin: auto;
+            margin-top: 2rem;
+            /* border: 1px solid black; */
+            padding: 10px;
+            border-radius: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            background-image: linear-gradient(90deg, rgb(131, 123, 221), rgb(93, 198, 93), black);
+        }
+
+        .input_main>input {
+            /* width: 400px; */
+            width: 70%;
+            border: 1px solid black;
+            border-radius: 10px;
+            outline: none;
+            /* text-align: center; */
+            padding-left: 10px;
+        }
+
+        .input_main>button {
+            cursor: pointer;
+            padding: 4px 16px;
+            border-radius: 50px;
+            border: 1px solid;
+            box-shadow: 2px 2px 2px black;
+            background-image: linear-gradient(to bottom, yellow, rgb(235, 140, 156));
+        }
+
+        .input_main>button:active {
+            transform: scale(0.97);
+        }
+
+        .todo_container {
+            width: 50%;
+            margin: auto;
+            margin-top: 0.2rem;
+            overflow: hidden;
+        }
+
+        .todo_item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            padding: 0.3rem;
+            margin-top: 0.1rem;
+            border-radius: 10px;
+            background-image: linear-gradient(90deg, rgb(131, 123, 221), rgb(93, 198, 93), black);
+            transition: 0.45s;
+        }
+
+        .todo_item>div {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+        }
+
+        .todo_item>div:nth-child(1){
+            width: 70%;
+            justify-content: flex-start;
+        }
+        .todo_item>div:nth-child(2){
+            width: 24%;
+            justify-content: flex-end;
+        }
+
+
+        .todo_item>div>span:nth-child(2) {
+            word-wrap: break-word;
+            /* width: 450px; */
+            width: 90%;
+        }
+
+        .todo_item>div>input {
+            display: none;
+            outline: none;
+            /* width: 450px; */
+            width: 90%;
+        }
+
+        .todo_item>div>button,
+        .todo_item>div>i {
+            box-shadow: 2px 2px 2px black;
+            cursor: pointer;
+            padding: 4px 16px;
+            border-radius: 50px;
+            border: 1px solid;
+            background-image: linear-gradient(to bottom, yellow, pink);
+        }
+
+        .todo_item>div>button:active,
+        .todo_item>div>i:active {
+            transform: scale(0.97);
+        }
+
+        .todo_item>div button:nth-child(2) {
+            display: none;
+        }
+
+        /* .show{
+            display: block;
+        }
+
+        .hide{
+            display: none;
+        } */
+    </style>
+
+</head>
+
+<body>
+    <div class="input_main">
+        Todo-list
+        <input type="text"> <button onclick="Create_todo()">Add</button>
+    </div>
+
+    <div class="todo_container"></div>
+
+
+
+    <script>
+        function numbering() {
+            let total = document.querySelector(".todo_container").children.length;
+            let items = document.querySelector(".todo_container").children;
+
+            for (let i = 0; i < total; i++) {
+                items[i].children[0].children[0].innerText = `${i + 1}.`;
+            }
+        }
+        function confirm(e) {
+            // </div><span><span> </div>   <input>   " <div> <""button Edit""> <button OK>  <i onclick="delete_item> </div> "
+
+            let val = e.target.parentElement.previousElementSibling.children[2].value;         // taking new value which we typed in input box
+            if (val == '') {
+                alert("Empty list item cannot be created !")
+            }
+            else {
+                e.target.parentElement.previousElementSibling.children[1].innerText = `${val}`;     // put new value in span tag
+                e.target.parentElement.previousElementSibling.children[1].style.display = "inline-block";    // showing the span tag
+                e.target.previousElementSibling.style.display = "block";                // showing the edit button
+                e.target.parentElement.previousElementSibling.children[2].style.display = "none";  //hiding the input box
+                e.target.style.display = "none";            // hiding the confirm button
+            }
+
+        }
+
+        function edit_item(e) {
+            // </div><span><span> </div>   <input>   " <div> <""button Edit""> <button OK>  <i onclick="delete_item> </div> "
+            e.target.parentElement.previousElementSibling.children[2].style.display = "block";  // input box                          //classList.toggle("show"); --> all the toggle were giving issue, probably bcz child element selector has higher precedence over the class selector.
+            e.target.parentElement.previousElementSibling.children[2].focus();   // it gives pointer by default inside input box
+            
+            e.target.parentElement.previousElementSibling.children[1].style.display = "none";    // span with input value          //classList.toggle("hide");
+            e.target.nextElementSibling.style.display = "block";  // ok button                             //toggle("show");
+            e.target.style.display = "none";                                                     //toggle("hide")  
+        }
+
+        // To delete item in todo list
+        function delete_item(e) {
+            e.target.parentElement.parentElement.style = "transform: translateX(-40rem)"
+            setTimeout(() => {
+                e.target.parentElement.parentElement.remove();
+                numbering();
+            }, 450)        // removing element
+
+        }
+
+
+        // To create items in todo list
+        function Create_todo() {
+            // taking input values from user
+            let input_val = document.querySelector(".input_main>input").value;
+
+            if (input_val == '') {
+                alert("Empty list item cannot be created !")
+
+            }
+            else {
+                // creating todo elements
+                let todo_item = document.createElement("div");
+
+                todo_item.innerHTML = `<div><span></span> <span>${input_val}</span><input type="text" placeholder=" No Input given " value="${input_val}"></div>  <div><button onclick="edit_item(event)">Edit</button> <button onclick="confirm(event)">Done</button>  <i onclick="delete_item(event)" class="fa-solid fa-trash"></i></div> `;
+                /* Instead of calling the delete_item(), we can also use <button onclick="this.parentElement.remove()">Delete</button>` */
+
+                // adding css to todo item
+                todo_item.classList.add("todo_item");
+
+                // adding child to parent container
+                document.querySelector(".todo_container").appendChild(todo_item);
+                numbering();
+            }
+
+
+        }
+
+    </script>
+
+</body>
+
+</html>
